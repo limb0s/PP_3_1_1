@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Список пользователей</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Имя</th>
+        <th>Возраст</th>
+        <th>Внести изменения</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${userList}">
+        <td th:text="${user.name}">Имя</td>
+        <td th:text="${user.age}">Возраст</td>
+        <td>
+            <form th:action="@{/user/update(id=${user.id})}" method="get">
+                <input type="hidden" name="id" th:value="${user.id}" />
+                <button type="submit" class="button">Обновить</button>
+            </form>
+            <form th:action="@{/user/delete(id=${user.id})}" method="post">
+                <button type="submit" class="button">Удалить</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<form th:action="@{/user/addUser}" method="get">
+    <button type="submit" class="button">Добавить нового пользователя</button>
+</form>
+</body>
+</html>
