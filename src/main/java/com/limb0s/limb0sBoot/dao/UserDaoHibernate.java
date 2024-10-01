@@ -3,13 +3,14 @@ package com.limb0s.limb0sBoot.dao;
 
 import com.limb0s.limb0sBoot.models.User;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class UserDaoHibernate implements UserDao{
+public class UserDaoHibernate implements UserDao {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -31,13 +32,18 @@ public class UserDaoHibernate implements UserDao{
 
     @Override
     public void deleteUser(int id) {
-        entityManager.remove(entityManager.find(User.class, id));
+        try {
+            User user = entityManager.getReference(User.class, id);
+            entityManager.remove(user);
+        } catch (EntityNotFoundException e) {
+            System.out.println("User with id " + id + " not found");
+        }
     }
 
     @Override
     public void updateUser(int id, User user) {
         User updateUser = entityManager.find(User.class, id);
-        if(updateUser != null) {
+        if (updateUser != null) {
             updateUser.setName(user.getName());
             updateUser.setAge(user.getAge());
         }
